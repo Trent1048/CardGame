@@ -6,6 +6,7 @@ public class Game {
     public static Stack<Card> deck;
     private static ArrayList<Card> playerHand;
     private static ArrayList<Card> botHand;
+    public static Scanner console = new Scanner(System.in);
 
     public static void main(String[] args) {
         intro();
@@ -51,10 +52,20 @@ public class Game {
 
     public static void printPlayerHand() {
         String msg = "Your hand contains:\n";
-        for(Card card : playerHand) {
-            msg += "\t -"+card.toString()+"\n";
+        for(int cardIndex = 0; cardIndex < playerHand.size(); cardIndex++) {
+            msg += "\t"+ (cardIndex + 1) + " - "+playerHand.get(cardIndex).toString()+"\n";
         }
         System.out.println(msg);
+    }
+
+    private static void playerTurn() {
+        printPlayerHand();
+        System.out.print("Which card would you like to ask the bot for? ");
+        int answer = console.nextInt();
+        Card selected = playerHand.get(answer - 1);
+        boolean successful = turn(playerHand, botHand, selected.getValue());
+        if(successful) System.out.println("The bot gave you a " + Card.ranks[selected.getValue()] + "!");
+        else System.out.println("The bot tells you to go fish...");
     }
 
     // checks if a card with the number cardNum is in 

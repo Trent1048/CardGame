@@ -7,7 +7,7 @@ public class Card {
         CLUB
     }
 
-    public static String[] ranks = new String[] {"One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"};
+    public final static String[] ranks = new String[] {"One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"};
 
     private Suit suit;
 

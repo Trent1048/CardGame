@@ -2,6 +2,7 @@ import java.util.*;
 
 public class Game {
 
+    // deck is a stack because we take cards off the top like in real life
     public static Stack<Card> deck;
     private static ArrayList<Card> playerHand;
     private static ArrayList<Card> botHand;
@@ -15,7 +16,7 @@ public class Game {
     public static void intro()
     {
         System.out.println(
-            "Welcome to Go Fish!"
+            "Welcome to Go Fish!\n"
             + "In case you don't know how to play, here is a small tutorial:\n"
             + "The goal of the game is to complete as many pairs as possible.\n"
             + "You do this by either drawing cards, 'Going Fish', or by asking your opponent for a card that you have already.\n"
@@ -54,5 +55,19 @@ public class Game {
             msg += "\t -"+card.toString()+"\n";
         }
         System.out.println(msg);
+    }
+
+    // checks if a card with the number cardNum is in 
+    // the otherHand and moves it over to hand if it is
+    // returns true if the card was found and moved, false if not
+    private static boolean turn(ArrayList<Card> hand, ArrayList<Card> otherHand, int cardNum) {
+        for(Card card : otherHand) {
+            if(card.getValue() == cardNum) {
+                otherHand.remove(card);
+                hand.add(card);
+                return true;
+            }
+        }
+        return false;
     }
 }

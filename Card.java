@@ -7,7 +7,7 @@ public class Card {
         CLUB
     }
 
-    public static String[] suits = new String[] {"One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"};
+    public static String[] ranks = new String[] {"One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"};
 
     public Suit suit;
 
@@ -22,7 +22,7 @@ public class Card {
     public String toString() {
         String raw = this.suit.toString();
         String firstChar = raw.substring(0, 1);
-        String theRest = raw.substring(1, raw.length()-1).toLowerCase();
-        return (suits[this.value-1]+" of "+firstChar+theRest+"s");
+        String theRest = raw.substring(1, raw.length() - 1).toLowerCase();
+        return (ranks[this.value - 1] + " of " + firstChar + theRest + "s");
     }
 }

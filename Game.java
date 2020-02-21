@@ -10,6 +10,19 @@ public class Game {
         setup();
     }
 
+    public static void intro()
+    {
+        System.out.println(
+            "Welcome to Go Fish!"
+            + "In case you don't know how to play, here is a small tutorial:\n"
+            + "The goal of the game is to complete as many pairs as possible.\n"
+            + "You do this by either drawing cards, 'Going Fish', or by asking your opponent for a card that you have already.\n"
+            + "When all of the cards have been used up, the player with the most pairs wins.\n"
+            + "In our rendition of the game, you will play against a bot we've designed.\n"
+            + "Good luck, and have fun!"
+        );
+    }
+
     public static void setup() {
         // creates and fills the deck of cards
         deck = new Stack<Card>();

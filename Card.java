@@ -22,7 +22,7 @@ public class Card {
     public String toString() {
         String raw = this.suit.toString();
         String firstChar = raw.substring(0, 1);
-        String theRest = raw.substring(1, raw.length() - 1).toLowerCase();
+        String theRest = raw.substring(1).toLowerCase();
         return (ranks[this.value - 1] + " of " + firstChar + theRest + "s");
     }
 }

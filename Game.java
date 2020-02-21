@@ -7,7 +7,9 @@ public class Game {
     private static ArrayList<Card> botHand;
 
     public static void main(String[] args) {
+        intro();
         setup();
+        printPlayerHand();
     }
 
     public static void intro()
@@ -19,7 +21,7 @@ public class Game {
             + "You do this by either drawing cards, 'Going Fish', or by asking your opponent for a card that you have already.\n"
             + "When all of the cards have been used up, the player with the most pairs wins.\n"
             + "In our rendition of the game, you will play against a bot we've designed.\n"
-            + "Good luck, and have fun!"
+            + "Good luck, and have fun!\n"
         );
     }
 
@@ -44,5 +46,13 @@ public class Game {
             playerHand.add(deck.pop());
             botHand.add(deck.pop());
         }
+    }
+
+    public static void printPlayerHand() {
+        String msg = "Your hand contains:\n";
+        for(Card card : playerHand) {
+            msg += "\t -"+card.toString()+"\n";
+        }
+        System.out.println(msg);
     }
 }

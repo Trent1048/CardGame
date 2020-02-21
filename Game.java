@@ -6,12 +6,21 @@ public class Game {
     public static Stack<Card> deck;
     private static ArrayList<Card> playerHand;
     private static ArrayList<Card> botHand;
+
     public static Scanner console = new Scanner(System.in);
+    public static Random random;
 
     public static void main(String[] args) {
+        random = new Random();
+
         intro();
         setup();
-        printPlayerHand();
+
+        boolean playing = true;
+
+        while(playing) {
+                       
+        }
     }
 
     public static void intro()
@@ -50,24 +59,6 @@ public class Game {
         }
     }
 
-    public static void printPlayerHand() {
-        String msg = "Your hand contains:\n";
-        for(int cardIndex = 0; cardIndex < playerHand.size(); cardIndex++) {
-            msg += "\t"+ (cardIndex + 1) + " - "+playerHand.get(cardIndex).toString()+"\n";
-        }
-        System.out.println(msg);
-    }
-
-    private static void playerTurn() {
-        printPlayerHand();
-        System.out.print("Which card would you like to ask the bot for? ");
-        int answer = console.nextInt();
-        Card selected = playerHand.get(answer - 1);
-        boolean successful = turn(playerHand, botHand, selected.getValue());
-        if(successful) System.out.println("The bot gave you a " + Card.ranks[selected.getValue()] + "!");
-        else System.out.println("The bot tells you to go fish...");
-    }
-
     // checks if a card with the number cardNum is in 
     // the otherHand and moves it over to hand if it is
     // returns true if the card was found and moved, false if not
@@ -80,5 +71,41 @@ public class Game {
             }
         }
         return false;
+    }
+
+    private static void botTurn() {
+        int cardIndex = random.nextInt(botHand.size());
+        Card card = botHand.get(cardIndex);
+        int num = card.getValue();
+        boolean gaveAwayCard = turn(botHand, playerHand, num);
+
+        System.out.println("The bot asked for a " + Card.ranks[num - 1]);
+        
+        if(gaveAwayCard) {
+            System.out.println("You gave away a card");
+        } else {
+            System.out.println("You told the bot to go fish");
+        }
+    }
+
+    public static void printPlayerHand() {
+        String msg = "Your hand contains:\n";
+        for(int cardIndex = 0; cardIndex < playerHand.size(); cardIndex++) {
+            msg += "\t"+ (cardIndex + 1) + " - " + playerHand.get(cardIndex).toString() + "\n";
+        }
+        System.out.println(msg);
+    }
+
+    private static void playerTurn() {
+        printPlayerHand();
+
+        System.out.print("Which card would you like to ask the bot for? ");
+
+        int answer = console.nextInt();
+        Card selected = playerHand.get(answer - 1);
+        boolean successful = turn(playerHand, botHand, selected.getValue());
+
+        if(successful) System.out.println("The bot gave you a " + Card.ranks[selected.getValue()] + "!");
+        else System.out.println("The bot tells you to go fish...");
     }
 }

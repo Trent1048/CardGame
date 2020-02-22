@@ -28,7 +28,7 @@ public class Game {
             playerTurn();
             botTurn();
 
-            if(deck.isEmpty()) {
+            if(playerHand.isEmpty() && botHand.isEmpty()) {
                 playing = false;
             }
         }
@@ -71,8 +71,8 @@ public class Game {
         botHand = new ArrayList<Card>();
 
         for(int cardNum = 0; cardNum < 7; cardNum++) {
-            playerHand.add(deck.pop());
-            botHand.add(deck.pop());
+            goFish(playerHand);
+            goFish(botHand);
         }
     }
 
@@ -112,8 +112,29 @@ public class Game {
         return pairsRemoved;
     }
 
+    // adds a card to the inputted hand
+    private static void goFish(ArrayList<Card> hand) {
+        if(!deck.isEmpty()) {
+            hand.add(deck.pop());
+        }
+    }
+
+    // Turns:
+
     private static void botTurn() {
-        int cardIndex = random.nextInt(botHand.size());
+        int botHandSize = botHand.size();
+
+        if(botHandSize == 0) {
+            for(int i = 0; i < 7; i++) {
+                goFish(botHand);
+            }
+        }
+
+        int cardIndex = 1;
+        if(botHandSize != 0) {
+            cardIndex = random.nextInt(botHand.size());
+        }
+        
         Card card = botHand.get(cardIndex);
         int num = card.getValue();
         boolean gaveAwayCard = turn(botHand, playerHand, num);
@@ -130,25 +151,9 @@ public class Game {
             System.out.println(msg);
         } else {
             System.out.println("You told the bot to go fish");
+            goFish(botHand);
         }
         botScore += removePairs(botHand);
-    }
-
-    public static void printPlayerHand() {
-        String msg = "Your hand contains:\n";
-
-        for(int cardIndex = 0; cardIndex < playerHand.size(); cardIndex++) {
-            msg += "\t"+ (cardIndex + 1) + " - " + playerHand.get(cardIndex).toString() + "\n";
-        }
-
-        msg += "You have " + playerScore + " pair";
-
-        // so it doesn't say "1 pairs"
-        if(playerScore != 1) {
-            msg += "s";
-        }
-
-        System.out.println(msg);
     }
 
     private static void playerTurn() {
@@ -173,7 +178,25 @@ public class Game {
             System.out.println("The bot gave you a " + Card.ranks[selected.getValue() - 1] + "!");
         } else  {
             System.out.println("The bot tells you to go fish...");
+            goFish(playerHand);
         }
         playerScore += removePairs(playerHand);
+    }
+
+    public static void printPlayerHand() {
+        String msg = "Your hand contains:\n";
+
+        for(int cardIndex = 0; cardIndex < playerHand.size(); cardIndex++) {
+            msg += "\t"+ (cardIndex + 1) + " - " + playerHand.get(cardIndex).toString() + "\n";
+        }
+
+        msg += "You have " + playerScore + " pair";
+
+        // so it doesn't say "1 pairs"
+        if(playerScore != 1) {
+            msg += "s";
+        }
+
+        System.out.println(msg);
     }
 }

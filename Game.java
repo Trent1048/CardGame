@@ -8,23 +8,40 @@ public class Game {
     private static ArrayList<Card> botHand;
 
     public static Scanner console = new Scanner(System.in);
-    public static Random random;
+    public static Random random = new Random();
+
+    // for keeping scores
+    private static int playerScore;
+    private static int botScore;
 
     public static void main(String[] args) {
-        random = new Random();
 
         intro();
         setup();
 
+        playerScore = removePairs(playerHand);
+        botScore = removePairs(botHand);
+
         boolean playing = true;
 
         while(playing) {
-                       
+            playerTurn();
+            botTurn();
+
+            if(deck.isEmpty()) {
+                playing = false;
+            }
         }
+
+        if(playerScore > botScore) {
+            System.out.println("You win!");
+        } else {
+            System.out.println("You lose!");
+        }
+        System.out.println("You had " + playerScore + " pairs and the bot had " + botScore + " pairs.");
     }
 
-    public static void intro()
-    {
+    public static void intro() {
         System.out.println(
             "Welcome to Go Fish!\n"
             + "In case you don't know how to play, here is a small tutorial:\n"
@@ -73,6 +90,28 @@ public class Game {
         return false;
     }
 
+    // looks through the hand and removes any pairs of cards with the same value
+    // returns how many pairs were removed
+    private static int removePairs(ArrayList<Card> hand) {
+        int pairsRemoved = 0;
+        for(int i = 0; i < hand.size(); i++) {
+            for(int k = 0; k < hand.size(); k++) {
+                // only check when the cards aren't the exact same
+                if(i != k) {
+                    Card card = hand.get(i);
+                    Card otherCard = hand.get(k);
+
+                    if(card.getValue() == otherCard.getValue()) {
+                        hand.remove(card);
+                        hand.remove(otherCard);
+                        pairsRemoved++;
+                    }
+                }
+            }
+        }
+        return pairsRemoved;
+    }
+
     private static void botTurn() {
         int cardIndex = random.nextInt(botHand.size());
         Card card = botHand.get(cardIndex);
@@ -83,29 +122,58 @@ public class Game {
         
         if(gaveAwayCard) {
             System.out.println("You gave away a card");
+            String msg = "You have " + playerScore + " pair";
+            // so it doesn't say "1 pairs"
+            if(playerScore != 1) {
+                msg += "s";
+            }
+            System.out.println(msg);
         } else {
             System.out.println("You told the bot to go fish");
         }
+        botScore += removePairs(botHand);
     }
 
     public static void printPlayerHand() {
         String msg = "Your hand contains:\n";
+
         for(int cardIndex = 0; cardIndex < playerHand.size(); cardIndex++) {
             msg += "\t"+ (cardIndex + 1) + " - " + playerHand.get(cardIndex).toString() + "\n";
         }
+
+        msg += "You have " + playerScore + " pair";
+
+        // so it doesn't say "1 pairs"
+        if(playerScore != 1) {
+            msg += "s";
+        }
+
         System.out.println(msg);
     }
 
     private static void playerTurn() {
         printPlayerHand();
 
-        System.out.print("Which card would you like to ask the bot for? ");
+        int answer;
+        while(true) {
+            System.out.print("Which card would you like to ask the bot for? ");
+            answer = console.nextInt();
 
-        int answer = console.nextInt();
+            if(answer <= playerHand.size() && answer > 0) {
+                break;
+            } else {
+                System.out.println("Invalid input");
+            }
+        }
+
         Card selected = playerHand.get(answer - 1);
         boolean successful = turn(playerHand, botHand, selected.getValue());
 
-        if(successful) System.out.println("The bot gave you a " + Card.ranks[selected.getValue()] + "!");
-        else System.out.println("The bot tells you to go fish...");
+        if(successful) {
+            System.out.println("The bot gave you a " + Card.ranks[selected.getValue() - 1] + "!");
+        } else  {
+            System.out.println("The bot tells you to go fish...");
+        }
+        playerScore += removePairs(playerHand);
     }
 }

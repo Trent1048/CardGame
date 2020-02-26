@@ -105,10 +105,7 @@ public class Game {
 
         // tells the user if they got a pair in their initial draw
         if(playerScore != 0) {
-            String msg = "You found " + playerScore + " pair";
-            if(playerScore != 0) {
-                msg += "s";
-            }
+            String msg = pluralize("You found " + playerScore + " pair", playerScore);
             msg += " on your initial draw";
             System.out.println(msg);
             console.nextLine();
@@ -163,10 +160,8 @@ public class Game {
 
     // executes a turn for the bot
     private static void botTurn() {
-        int botHandSize = botHand.size();
-
         // draw seven cards when the bot runs out
-        if(botHandSize == 0) {
+        if(botHand.size() == 0) {
             for(int i = 0; i < 7; i++) {
                 goFish(botHand);
             }
@@ -174,7 +169,7 @@ public class Game {
 
         // if the bot has no cards, even after drawing seven, don't do anything
         // because it means there are no cards in the deck and the game is about to end
-        if(botHandSize != 0) {
+        if(botHand.size() != 0) {
             // picks a random card from the hand and guesses that card
             int cardIndex = random.nextInt(botHand.size());
             Card card = botHand.get(cardIndex);
@@ -187,6 +182,7 @@ public class Game {
             // tells the user the outcome of the bot's turn
             if(gaveAwayCard) {
                 System.out.println("You gave away a card");
+                System.out.println(pluralize("The bot now has " + botScore + " pair", botScore));
                 console.nextLine();
                 printPlayerHand();
             } else {
@@ -203,6 +199,20 @@ public class Game {
 
     // executes a turn for the player
     private static void playerTurn() {
+
+        // draws 7 cards when the player's hand is empty
+        if(playerHand.size() == 0) {
+            for(int i = 0; i < 7; i++) {
+                goFish(playerHand);
+            }
+        }
+
+        // if it is still empty, the deck is also empty and the player can't do anything
+        if(playerHand.size() == 0) {
+            System.out.println("You have nothing in your hand.");
+            return;
+        }
+
         printPlayerHand();
 
         // loop to make sure the user inputs a valid number
@@ -248,18 +258,24 @@ public class Game {
     public static void printPlayerHand() {
         String msg = "Your hand contains:\n";
 
+        if(playerHand.isEmpty()) {
+            System.out.println(msg + "Nothing");
+        }
+
         for(int cardIndex = 0; cardIndex < playerHand.size(); cardIndex++) {
             msg += "\t"+ (cardIndex + 1) + " - " + playerHand.get(cardIndex).toString() + "\n";
         }
 
-        msg += "You have " + playerScore + " pair";
-
-        // so it doesn't say "1 pairs"
-        if(playerScore != 1) {
-            msg += "s";
-        }
+        msg += pluralize("You have " + playerScore + " pair", playerScore);
 
         System.out.println(msg);
-        console.nextLine();
+    }
+
+    // used to make it never print out "1 pairs"
+    public static String pluralize(String words, int num) {
+        if(num != 1) {
+            words += "s";
+        }
+        return words;
     }
 }
